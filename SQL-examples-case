@@ -1,18 +1,22 @@
 ## CASE EXAMPLE
 
+Soccer database exercise: for each match, show the date, the opponent of the home team and the outcome from the home team's point of view.
+
 ``` sql
---
-SELECT 
+SELECT
 	m.date,
-	--Select the team long name column and call it 'opponent'
-	t.team_long_name AS opponent, 
+	-- Select the team long name column and call it 'opponent'
+	t.team_long_name AS opponent,
 	-- Complete the CASE statement with an alias
 	CASE WHEN m.home_goal > m.away_goal THEN 'Home win!'
         WHEN m.home_goal < m.away_goal THEN 'Home loss :('
-        ELSE 'Tie' 
+        ELSE 'Tie'
 	END AS outcome
 FROM matches_spain AS m
--- Left join teams_spain onto matches_spain
+-- Left join teams_spain onto matches_spain using the away team id,
+-- because the opponent of the home team is the away team
 LEFT JOIN teams_spain AS t
-ON m.id = t.id;
+ON m.awayteam_id = t.team_api_id;
 ```
+
+Note: the join must use the team id of the match (`awayteam_id`) and the team id of the teams table (`team_api_id`). Joining `m.id = t.id` compares the id of the match with the id of the team and pairs unrelated rows.
